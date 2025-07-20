@@ -229,6 +229,7 @@ class UsersController extends Controller
                     $file = $request->file('id_picture');
                     $pictureData = file_get_contents($file->getRealPath()); // Get the file content as a string
                 }
+                $hashedPassword = Hash::make($request->password);
                 $add = User::create([
                     'username' => $request->username,
                     'first_name' => strtoupper($request->first_name),
@@ -237,6 +238,7 @@ class UsersController extends Controller
                     'gender' => $request->gender,   
                     'address' => $request->address,   
                     'contact' => $request->contact,   
+                    'password' => $hashedPassword,   
                     'role' => strtoupper($role),   
                     'id_picture' => $pictureData,   
                     'access_level' => $request->access_level,   
@@ -265,7 +267,7 @@ class UsersController extends Controller
         }
         else {
             return response()->json([
-                'message' => 'LRN already exist!'
+                'message' => 'Username already exist!'
             ]);
         }
     }

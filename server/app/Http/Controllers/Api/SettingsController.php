@@ -15,7 +15,7 @@ class SettingsController extends Controller
     // Get all the list of system info
     public function index() {
         $settings = App_Info::select('*',
-            DB::raw("TO_BASE64(taripa) as logo"),
+            DB::raw("TO_BASE64(taripa) as taripa"),
             )
             ->get();
 

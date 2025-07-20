@@ -67,13 +67,14 @@ class LoginController extends Controller {
 
         $userInfo = User::select('*', 
             DB::raw("CONCAT_WS(' ', first_name, middle_name, last_name) as full_name"),
+            DB::raw("TO_BASE64(id_picture) as id_picture"),
             DB::raw("DATE_FORMAT(last_online, '%M %d, %Y') as last_online")
         )
         ->where('username', $authUser->username)
         ->first();
 
         $sysem_detail = App_Info::select('system_info',
-            DB::raw("TO_BASE64(taripa) as logo"),
+            DB::raw("TO_BASE64(taripa) as taripa"),
             )
         ->first();
 

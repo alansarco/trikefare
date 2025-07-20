@@ -19,7 +19,7 @@ class GeneralController extends Controller {
     public function app_info() {
         try {
             $app_info = App_info::select('*',
-                DB::raw("TO_BASE64(taripa) as logo"),
+                DB::raw("TO_BASE64(taripa) as taripa"),
                 )
                 ->first();
 
