@@ -226,7 +226,7 @@ function Reports() {
               })  
               .catch(error => {
                 setSearchTriggered(true);
-                toast.error("Cant delete report!", { autoClose: true });
+                toast.error("Cant reopen report!", { autoClose: true });
                 passToErrorLogs(error, currentFileName);
               });
           }

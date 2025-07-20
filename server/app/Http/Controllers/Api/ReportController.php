@@ -159,7 +159,7 @@ class ReportController extends Controller
             ]);
         }
 
-        $update = Report::where('id', $request->id)->update([ 'status' => 0]);
+        $update = Report::where('reportid', $request->id)->update([ 'status' => 0]);
         if($update) {
             return response()->json([
                 'status' => 200,
