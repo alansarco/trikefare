@@ -70,9 +70,9 @@ class ForgotPasswordController extends Controller
         }
         catch (Exception $e) {
             return response()->json([
-                'status' => 404,
+                'status' => 500,
                 'message' => $e->getMessage()
-            ], 404);
+            ], 500);
         }
     }
 
