@@ -268,9 +268,9 @@ function Reports() {
         <SoftBox p={2}>
             <SoftBox className="px-md-4 py-2 d-md-flex d-block" justifyContent="space-between" alignItems="center">
               <SoftBox>
-                  <SoftTypography className="text-uppercase text-secondary" variant="h6" >Report History</SoftTypography>
+                <SoftTypography className="text-uppercase text-secondary" variant="h6" >Report History</SoftTypography>
               </SoftBox>
-              <SoftBox display="flex">
+              <SoftBox display="flex" justifyContent="end">
                 <SoftBox component="form" role="form" className="px-md-0 px-2" onSubmit={handleSubmit}>
                   <Grid container spacing={1} py={1} pb={2}>  
                     <Grid item xs={12} className="d-block d-md-flex">

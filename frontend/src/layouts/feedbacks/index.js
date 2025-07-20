@@ -228,10 +228,10 @@ function Feedbacks() {
               <SoftBox>
                   <SoftTypography className="text-uppercase text-secondary" variant="h6" >Feedback History</SoftTypography>
               </SoftBox>
-              <SoftBox display="flex">
+              <SoftBox display="flex" justifyContent="end">
                 <SoftBox component="form" role="form" className="px-md-0 px-2" onSubmit={handleSubmit}>
                   <Grid container spacing={1} py={1} pb={2}>  
-                    <Grid item xs={12} className="d-block d-md-flex">
+                    <Grid item xs={12} className="d-flex">
                         <SoftBox className="px-md-0 px-2" display="flex" margin="0" justifyContent="end">
                           <select className="form-select-sm text-secondary rounded-5 me-2 cursor-pointer border span" name="asof" value={formData.asof} onChange={handleChange} >
                             <option value="">All</option>

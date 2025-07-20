@@ -279,11 +279,9 @@ function Announcements() {
                         <> <CalendarMonthTwoToneIcon /> </>
                       }
                     </SoftButton>
-                    {access >= 10 &&
-                    <SoftButton onClick={() => setRendering(3)} className="ms-2 py-0 px-3 d-flex rounded-pill" variant="gradient" color="error" size="small" >
+                    <SoftButton onClick={() => setRendering(3)} className="ms-2 py-0 px-md-3 px-4 d-flex rounded-pill text-nowrap" variant="gradient" color="error" size="small" >
                       <Icon>add</Icon> Create New 
                     </SoftButton>
-                    }
                     
                 </SoftBox>
             </SoftBox>

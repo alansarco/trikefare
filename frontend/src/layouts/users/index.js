@@ -191,9 +191,9 @@ function Users() {
               <Card className="px-md-4 px-2 pt-3 pb-md-3 pb-2">
                 <SoftBox component="form" role="form" className="px-md-0 px-2" onSubmit={handleSubmit}>
                     <Grid container spacing={1} py={1} pb={2}>  
-                        <Grid item xs={12} lg={8} className="d-block d-md-flex">
+                        <Grid item xs={12} md={6} lg={7} className="d-block d-md-flex">
                             <SoftTypography variant="button" className="me-2 my-auto">Filter Result:</SoftTypography>
-                            <SoftBox className="my-auto">
+                            <SoftBox className="my-auto px-md-0 px-2">
                               <select className="form-select-sm text-secondary rounded-5 me-2 cursor-pointer border span" name="access_level" value={formData.access_level} onChange={handleChange} >
                                 <option value="">-- User Type --</option>
                                 {accessLevelSelect && accessLevelSelect.map((acc) => (
@@ -224,7 +224,7 @@ function Users() {
                             </select>
                             </SoftBox>
                         </Grid>   
-                        <Grid item xs={12} lg={4}>  
+                        <Grid item xs={12} md={6} lg={5}>  
                             <SoftBox className="px-md-0 px-2" display="flex" margin="0" justifyContent="end">
                                 <SoftInput 
                                     value={formData.filter}

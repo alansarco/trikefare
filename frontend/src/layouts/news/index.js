@@ -258,7 +258,7 @@ function News() {
                             <SoftButton className="px-3 rounded-0 rounded-right" variant="gradient" color="error" size="medium" iconOnly type="submit">
                                 <Icon>search</Icon>
                             </SoftButton>
-                            <SoftButton onClick={() => setRendering(3)} className="ms-2 py-0 px-3 d-flex rounded-pill" variant="gradient"   color="error" size="small" >
+                            <SoftButton onClick={() => setRendering(3)} className="ms-2 py-0 px-md-3 px-5 d-flex rounded-pill text-nowrap" variant="gradient"   color="error" size="small" >
                                 <Icon>add</Icon> Create New 
                               </SoftButton>
                         </SoftBox>

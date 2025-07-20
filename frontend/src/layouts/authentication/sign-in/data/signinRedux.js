@@ -47,7 +47,7 @@ export function useSignInData() {
             dispatch(actions.fetchSignInFail(error));
             passToErrorLogs(error, currentFileName);
             if(isSignInOrSignUp)
-              toast.error(messages.app_infoError, { autoClose: true });
+              toast.error(error, { autoClose: true });
               if(!token) {
                 navigate("/authentication/sign-in");
               }
