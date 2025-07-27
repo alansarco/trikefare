@@ -21,6 +21,7 @@ class LoginController extends Controller {
     }
     public function login(Request $request)  {
         $rules = [
+            'access_level' => 'required',
             'username' => 'required|string',
             'password' => 'required|string',
         ];
@@ -34,6 +35,7 @@ class LoginController extends Controller {
         }   
 
         $verifyUser = User::select('username', 'access_level', 'role')
+            ->where('access_level', $request->access_level)
             ->where('username', $request->username)
             ->where('account_status', 1)
             ->first();
