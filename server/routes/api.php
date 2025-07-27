@@ -12,6 +12,7 @@ use App\Http\Controllers\Api\NewsController;
 use App\Http\Controllers\Api\SignupController;
 use App\Http\Controllers\Api\ReportController;
 use App\Http\Controllers\Api\SettingsController;
+use App\Http\Controllers\Api\ZProfileController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -35,6 +36,10 @@ Route::post('submitpassword', [ForgotPasswordController::class, 'submitpassword'
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('user', [LoginController::class, 'user']);
     Route::get('logout', [LoginController::class, 'logout']);
+
+    Route::prefix('driver')->group(function () {
+        Route::get('getProfile', [ZProfileController::class, 'getProfile']);
+    });
 
     Route::prefix('dashboard')->group(function () {
         Route::get('otherStats', [DashboardController::class, 'OtherStatistics']);
