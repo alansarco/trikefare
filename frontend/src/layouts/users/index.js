@@ -210,7 +210,7 @@ function Users() {
                                 </option>
                                 ))}
                             </select>
-                            <select className="form-select-sm text-secondary rounded-5 cursor-pointer border span"
+                            {/* <select className="form-select-sm text-secondary rounded-5 cursor-pointer border span"
                               name="gender"
                               value={formData.gender}
                               onChange={handleChange}
@@ -221,7 +221,7 @@ function Users() {
                                   {gender.desc}
                                 </option>
                               ))}
-                            </select>
+                            </select> */}
                             </SoftBox>
                         </Grid>   
                         <Grid item xs={12} md={6} lg={5}>  
