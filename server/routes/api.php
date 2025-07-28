@@ -39,6 +39,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::prefix('driver')->group(function () {
         Route::get('getProfile', [ZProfileController::class, 'getProfile']);
+        Route::post('updateProfile', [ZProfileController::class, 'updateProfile']);
     });
 
     Route::prefix('dashboard')->group(function () {
