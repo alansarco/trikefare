@@ -21,6 +21,7 @@ class LoginController extends Controller {
     }
     public function login(Request $request)  {
         $rules = [
+            'access_level' => 'required',
             'username' => 'required|string',
             'password' => 'required|string',
         ];
@@ -33,7 +34,10 @@ class LoginController extends Controller {
             ]);
         }   
 
-        $verifyUser = User::select('username', 'access_level', 'role')
+        $verifyUser = User::select('username', 'access_level', 'role', 
+                DB::raw("CONCAT_WS(' ', first_name, middle_name, last_name) as fullname"
+            ))
+            ->where('access_level', $request->access_level)
             ->where('username', $request->username)
             ->where('account_status', 1)
             ->first();
@@ -51,6 +55,8 @@ class LoginController extends Controller {
                 'user' => $user->username,
                 'role' => $user->role,
                 'access' => $user->access_level,
+                'fullname' => $verifyUser->fullname ?? "N/A",
+                'contact' => $user->contact ?? "N/A",
                 'access_token' => $token,
                 'message' => "Login Success!"
             ])->withCookie($cookie);
