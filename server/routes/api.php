@@ -12,6 +12,7 @@ use App\Http\Controllers\Api\NewsController;
 use App\Http\Controllers\Api\SignupController;
 use App\Http\Controllers\Api\ReportController;
 use App\Http\Controllers\Api\SettingsController;
+use App\Http\Controllers\Api\ZAnnouncementController;
 use App\Http\Controllers\Api\ZHistoryController;
 use App\Http\Controllers\Api\ZNewsFareController;
 use App\Http\Controllers\Api\ZProfileController;
@@ -50,6 +51,8 @@ Route::middleware('auth:sanctum')->group(function () {
 
         Route::get('getBookings', [ZReportController::class, 'getBookings']);
         Route::post('sumbitReport', [ZReportController::class, 'sumbitReport']);
+
+        Route::get('getAnnouncement', [ZAnnouncementController::class, 'getAnnouncement']);
     });
 
     Route::prefix('dashboard')->group(function () {

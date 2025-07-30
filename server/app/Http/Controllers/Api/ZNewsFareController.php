@@ -55,7 +55,7 @@ class ZNewsFareController extends Controller {
             else {
                 return response()->json([
                     'status' => 500,
-                    'newsData' => $newsData,
+                    'newsData' => [],
                     'message' => "News not retrieved!"
                 ]);
             }
