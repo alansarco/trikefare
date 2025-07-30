@@ -16,6 +16,7 @@ class Report extends Model
     protected $fillable = [
         'reportid',
         'bookid',
+        'report_from',
         'description',
         'status',
         'created_by', 

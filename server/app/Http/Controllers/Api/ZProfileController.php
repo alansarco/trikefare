@@ -26,7 +26,10 @@ class ZProfileController extends Controller {
                 'id_number', 'email', 'gender', 'address',
                 DB::raw("CONCAT_WS(' ', first_name, middle_name, last_name) as fullname"),
                 // DB::raw("TO_BASE64(id_picture) as id_picture"),
+                // DB::raw("CONCAT('data:image/png;base64,', TO_BASE64(id_picture)) as id_picture")
+                // DB::raw("CONCAT('data:image/png;base64,', REPLACE(REPLACE(TO_BASE64(id_picture), '\n', ''), '\r', '')) as id_picture")
                 )
+
                 ->where('username', Auth::user()->username)->first();
 
 

@@ -12,7 +12,10 @@ use App\Http\Controllers\Api\NewsController;
 use App\Http\Controllers\Api\SignupController;
 use App\Http\Controllers\Api\ReportController;
 use App\Http\Controllers\Api\SettingsController;
+use App\Http\Controllers\Api\ZHistoryController;
+use App\Http\Controllers\Api\ZNewsFareController;
 use App\Http\Controllers\Api\ZProfileController;
+use App\Http\Controllers\Api\ZReportController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -40,6 +43,13 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::prefix('driver')->group(function () {
         Route::get('getProfile', [ZProfileController::class, 'getProfile']);
         Route::post('updateProfile', [ZProfileController::class, 'updateProfile']);
+
+        Route::get('getHistory', [ZHistoryController::class, 'getHistory']);
+
+        Route::post('getNewsFare', [ZNewsFareController::class, 'getNewsFare']);
+
+        Route::get('getBookings', [ZReportController::class, 'getBookings']);
+        Route::post('sumbitReport', [ZReportController::class, 'sumbitReport']);
     });
 
     Route::prefix('dashboard')->group(function () {
