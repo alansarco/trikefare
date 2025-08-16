@@ -31,8 +31,9 @@ import { useDashboardData } from "layouts/dashboard/data/dashboardRedux";
 import { statusSelect } from "components/General/Utils";
 import SoftInput from "components/SoftInput";
 import { Icon } from "@mui/material";
-import { reportStatusSelect } from "components/General/Utils";
+import { reportStatusSelect, reportFromSelect } from "components/General/Utils";
 import CustomPagination from "components/General/CustomPagination";
+import SoftBadge from "components/SoftBadge";
 
 function Reports() {
   const currentFileName = "layouts/reports/index.js";
@@ -63,6 +64,7 @@ function Reports() {
   const initialState = {
       filter: "",
       report_status: "0",
+      report_from: "",
   };
   
   const [formData, setFormData] = useState(initialState);
@@ -70,7 +72,7 @@ function Reports() {
   const handleChange = (e) => {
       const { name, value, type } = e.target;
       setFormData({ ...formData, [name]: value });
-      if (["report_status"].includes(name)) {
+      if (["report_status", "report_from"].includes(name)) {
         setSearchTriggered(true);
         setPage(1);
       }
@@ -275,8 +277,18 @@ function Reports() {
                   <Grid container spacing={1} py={1} pb={2}>  
                     <Grid item xs={12} className="d-block d-md-flex">
                         <SoftBox className="px-md-0 px-2" display="flex" margin="0" justifyContent="end">
+                            <select className="form-select-sm text-secondary rounded-5 me-2 cursor-pointer border span" name="report_from" value={formData.report_from} onChange={handleChange} >
+                                <option value="">All Reports</option>
+                                <optgroup label="Reported by">
+                                  {reportFromSelect && reportFromSelect.map((status) => (
+                                      <option key={status.value} value={status.value}>
+                                        {status.desc}
+                                      </option>
+                                    ))}
+                                </optgroup>
+                            </select>
                             <select className="form-select-sm text-secondary rounded-5 me-2 cursor-pointer border span" name="report_status" value={formData.report_status} onChange={handleChange} >
-                                <option value="">-- Status --</option>
+                                <option value="">All Status</option>
                                 {reportStatusSelect && reportStatusSelect.map((status) => (
                                 <option key={status.value} value={status.value}>
                                         {status.desc}
@@ -315,19 +327,19 @@ function Reports() {
             <Card className="bg-white rounded-5 mb-3" key={report.reportid}>
               <SoftBox p={2} >
                 <Grid container spacing={0} alignItems="center">
-
                   <Grid item xs={12} md={6}>
                     <Grid container spacing={0} alignItems="center">
                       <Grid item xs={12}>
-                        <SoftTypography variant="button" color={report.report_status == 1 ? "info" : "error"}>Booking ID: </SoftTypography>
+                        <SoftTypography variant="button" color={report.report_status == 1 ? "info" : "error"}> Booking ID:  </SoftTypography>
                         <SoftTypography variant="button" className="text-sm fw-bold"> {report.bookid} </SoftTypography>
+                        <SoftBadge color={report.report_from == 1 ? "error" : "info"} size="xs" badgeContent={report.report_from == 1 ? "driver" : "commuter"} container />
                       </Grid>
                       <Grid item xs={12}>
-                        <SoftTypography variant="button" className="">Email: </SoftTypography>
+                        <SoftTypography variant="button" className="">Passenger Email: </SoftTypography>
                         <SoftTypography variant="button" className="fw-normal"> {report.passengerid} </SoftTypography>
                       </Grid>  
                       <Grid item xs={12}>
-                        <SoftTypography variant="button" className="">Mobile Number: </SoftTypography>
+                        <SoftTypography variant="button" className="">Passenger Contact: </SoftTypography>
                         <SoftTypography variant="button" className="fw-normal"> {report.passenger_contact} </SoftTypography>
                       </Grid>  
                       <Grid item xs={12}>
@@ -336,7 +348,6 @@ function Reports() {
                       </Grid>  
                     </Grid>
                   </Grid>  
-
                   <Grid item xs={12} md={6}>
                     <Grid container spacing={0} alignItems="center">
                       <Grid item xs={12}>

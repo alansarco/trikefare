@@ -14,6 +14,11 @@ export const reportStatusSelect = [
       { value: 1, desc: "Resolved" }
 ];
 
+export const reportFromSelect = [
+      { value: 0, desc: "Commuter" },
+      { value: 1, desc: "Driver" }
+];
+
 export const statusSelect = [
       { value: 1, desc: "Active" },
       { value: 0, desc: "Inactive" },

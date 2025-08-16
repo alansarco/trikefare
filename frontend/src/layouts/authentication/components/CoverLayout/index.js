@@ -11,13 +11,20 @@ import SoftTypography from "components/SoftTypography";
 // React examples
 import PageLayout from "essentials/LayoutContainers/PageLayout";
 import brand from "assets/images/tricycle.png";
-
+import { latestversions } from "../version/version-data";
+import { Link } from "react-router-dom";
 
 function CoverLayout({ color, header, title, description, image, children }) {
   return (
     <PageLayout background="transnav">
       <SoftBox className="custom-bg" height={{ xs: "100%", md: "100vh" }}>
         {/* Upper Part */}
+        <SoftBox display="flex" justifyContent="end" className="bg-light">
+          <SoftTypography mb={0} component={Link} to="/software-versions" 
+            className="text-sm text-right pe-5 pt-3 fw-bold" color="error">
+            {latestversions}
+          </SoftTypography>
+        </SoftBox>
         <SoftBox className="d-flex justify-content-center align-items-center bg-light" height={{ xs: "300px", lg: "50%"}}>
           <SoftBox className="">
             <SoftBox className="d-flex justify-md-content-center">
