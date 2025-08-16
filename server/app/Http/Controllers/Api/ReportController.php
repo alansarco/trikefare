@@ -52,7 +52,7 @@ class ReportController extends Controller
         }
 
         if ($request->report_from != "") {
-            $query->where('reports.status', $request->report_status);
+            $query->where('reports.report_from', $request->report_from);
         }
             
         $reports = $query->paginate(20);
