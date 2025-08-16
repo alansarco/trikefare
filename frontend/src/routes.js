@@ -24,6 +24,7 @@ import ThumbUpAltTwoToneIcon from '@mui/icons-material/ThumbUpAltTwoTone';
 import VideoCameraBackTwoToneIcon from '@mui/icons-material/VideoCameraBackTwoTone';
 import Feedbacks from "layouts/feedbacks";
 import News from "layouts/news";
+import Versions from "layouts/authentication/components/version/Versions";
 
 // Accept access as a parameter
 const routes = (access) => [
@@ -156,6 +157,15 @@ const routes = (access) => [
     route: "/authentication/sign-up",
     icon: <InfoTwoToneIcon size="12px" />,
     component: <SignUp />,
+    noCollapse: true,
+  },
+  {
+    type: "",
+    name: "Versions",
+    key: "versions",
+    route: "/software-versions",
+    icon: <InfoTwoToneIcon size="12px" />,
+    component: <Versions />,
     noCollapse: true,
   },
 ].filter(Boolean); // Filter out `null` values from the array

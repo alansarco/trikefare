@@ -13,6 +13,7 @@ import axios from "axios";
 import { apiRoutes } from "components/Api/ApiRoutes";
 import DeleteTwoToneIcon from '@mui/icons-material/DeleteTwoTone';
 import ReplyTwoToneIcon from '@mui/icons-material/ReplyTwoTone';
+import SoftBadge from "components/SoftBadge";
 
 function Edit({DATA, HandleRendering, ReloadTable, handleDelete }) {
     const currentFileName = "layouts/reports/components/Edit/index.js";
@@ -104,6 +105,14 @@ function Edit({DATA, HandleRendering, ReloadTable, handleDelete }) {
                                         <SoftTypography variant="button" className="fw-normal"> {DATA.bookid} </SoftTypography>
                                     </Grid>
                                     <Grid item xs={12}>
+                                        <SoftTypography variant="button" className="">Reported By: </SoftTypography>
+                                        <SoftBadge color={DATA.report_from == 1 ? "error" : "info"} size="xs" badgeContent={DATA.report_from == 1 ? "driver" : "commuter"} container />
+                                    </Grid>  
+                                    <Grid item xs={12}>
+                                        <SoftTypography variant="button" className="">Concern: </SoftTypography>
+                                        <SoftTypography variant="button" className="fw-bold" color="error"> {DATA.description} </SoftTypography>
+                                    </Grid>  
+                                    <Grid item xs={12}>
                                         <SoftTypography variant="button" className="">Passenger Name: </SoftTypography>
                                         <SoftTypography variant="button" className="fw-normal"> {DATA.passenger_name} </SoftTypography>
                                     </Grid>  
@@ -118,10 +127,6 @@ function Edit({DATA, HandleRendering, ReloadTable, handleDelete }) {
                                     <Grid item xs={12}>
                                         <SoftTypography variant="button" className="">Passenger Address: </SoftTypography>
                                         <SoftTypography variant="button" className="fw-normal"> {DATA.passenger_address} </SoftTypography>
-                                    </Grid>  
-                                    <Grid item xs={12}>
-                                        <SoftTypography variant="button" className="">Concern: </SoftTypography>
-                                        <SoftTypography variant="button" className="fw-normal"> {DATA.description} </SoftTypography>
                                     </Grid>  
                                     <Grid item xs={12}>
                                         <SoftTypography variant="button" className="">Destination FROM: </SoftTypography>

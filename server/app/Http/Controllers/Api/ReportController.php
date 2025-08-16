@@ -20,6 +20,7 @@ class ReportController extends Controller
             ->select(
                 'bookings.*',
                 'reports.reportid',
+                'reports.report_from',
                 'reports.status as report_status',
                 'reports.description',
                 DB::raw("DATE_FORMAT(reports.created_at, '%M %d, %Y %h:%i %p') AS report_datetime"),
@@ -49,6 +50,10 @@ class ReportController extends Controller
         if ($request->report_status != "") {
             $query->where('reports.status', $request->report_status);
         }
+
+        if ($request->report_from != "") {
+            $query->where('reports.status', $request->report_status);
+        }
             
         $reports = $query->paginate(20);
 
@@ -67,7 +72,7 @@ class ReportController extends Controller
 
     }
 
-    // retrieve specific event's information
+    // retrieve specific report's information
     public function retrieve(Request $request) {
         $report = Report::leftJoin('bookings', 'reports.bookid', '=', 'bookings.bookid')
             ->leftJoin('users as driver', 'bookings.driverid', '=', 'driver.username')
@@ -75,6 +80,7 @@ class ReportController extends Controller
             ->select(
                 'bookings.*',
                 'reports.reportid',
+                'reports.report_from',
                 'reports.description',
                 'reports.status',
                 DB::raw("DATE_FORMAT(bookings.created_at, '%M %d, %Y %h:%i %p') AS booking_datetime"),
