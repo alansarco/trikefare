@@ -1,6 +1,15 @@
-export const latestversions = "V1.1.250816"
+export const latestversions = "V1.1.250818"
 
 export const versions = [
+    { 
+        version: "V1.1.250818", 
+        details: [
+            {
+                types: "update",
+                description: "Enhane UI for User Module filter selection"
+            },
+        ]
+    },
     { 
         version: "V1.1.250816", 
         details: [
