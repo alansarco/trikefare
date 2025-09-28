@@ -66,7 +66,7 @@ class ZReportController extends Controller
             if ($validator->fails()) {
                 return response()->json([
                     'status' => 500,
-                    'message' => $validator->messages()->all()
+                    'message' => 'All fields are required!'
                 ]);
             }
             $add = Report::create([
