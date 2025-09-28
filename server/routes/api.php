@@ -20,6 +20,7 @@ use App\Http\Controllers\Api\ZReportController;
 use App\Http\Controllers\Api\XHistoryController;
 use App\Http\Controllers\Api\XProfileController;
 use App\Http\Controllers\Api\XNewsFareController;
+use App\Http\Controllers\Api\XLoginController;
 
 use Illuminate\Support\Facades\Route;
 
@@ -41,7 +42,8 @@ Route::post('createotp', [ForgotPasswordController::class, 'createotp']);
 Route::post('validateotp', [ForgotPasswordController::class, 'validateotp']);
 Route::post('submitpassword', [ForgotPasswordController::class, 'submitpassword']);
 Route::prefix('commuter')->group(function () { // Kianu
-    Route::post('createuser', [XHistoryController::class, 'createUser']);
+    Route::post('createuser-commuter', [XLoginController::class, 'createUser']);
+    Route::post('login-commuter', [XLoginController::class, 'login']);
 });
 
 Route::middleware('auth:sanctum')->group(function () {
