@@ -43,11 +43,18 @@ Route::post('submitpassword', [ForgotPasswordController::class, 'submitpassword'
 Route::prefix('commuter')->group(function () { // Kianu
     Route::post('createuser', [XHistoryController::class, 'createUser']);
 });
+Route::prefix('driver')->group(function () { // Kianu
+    Route::post('createDriver', [ZProfileController::class, 'createDriver']);
+});
+//Validate the created driver
+Route::get('/verify-account/{token}', [ZProfileController::class, 'verifyAccount']);
+
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('user', [LoginController::class, 'user']);
     Route::get('logout', [LoginController::class, 'logout']);
 
+    //Driver API
     Route::prefix('driver')->group(function () {
         Route::get('getProfile', [ZProfileController::class, 'getProfile']);
         Route::post('updateProfile', [ZProfileController::class, 'updateProfile']);
@@ -61,6 +68,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
         Route::get('getAnnouncement', [ZAnnouncementController::class, 'getAnnouncement']);
     });
+    // End of Driver API
 
     Route::prefix('dashboard')->group(function () {
         Route::get('otherStats', [DashboardController::class, 'OtherStatistics']);

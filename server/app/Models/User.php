@@ -38,6 +38,7 @@ class User extends Authenticatable
         'password', 
         'password_change',
         'account_status',
+        'verify_token',
         'updated_by',
         'created_by'
     ];

@@ -195,7 +195,7 @@ function Users() {
                             <SoftTypography variant="button" className="me-2 my-auto">Filter Result:</SoftTypography>
                             <SoftBox className="my-auto px-md-0 px-2">
                               <select className="form-select-sm text-secondary rounded-5 me-2 cursor-pointer border span" name="access_level" value={formData.access_level} onChange={handleChange} >
-                                <option value="">-- User Type --</option>
+                                <option value="">All User</option>
                                 {accessLevelSelect && accessLevelSelect.map((acc) => (
                                 <option key={acc.value} value={acc.value}>
                                         {acc.desc}
@@ -203,7 +203,7 @@ function Users() {
                                 ))}
                             </select>
                             <select className="form-select-sm text-secondary rounded-5 me-2 cursor-pointer border span" name="account_status" value={formData.account_status} onChange={handleChange} >
-                                <option value="">-- Account Status --</option>
+                                <option value="">All Status</option>
                                 {statusSelect && statusSelect.map((status) => (
                                 <option key={status.value} value={status.value}>
                                         {status.desc}
