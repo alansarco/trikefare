@@ -27,71 +27,18 @@ class XHistoryController extends Controller
         // $accessLevel = $request->access_level ?? '';
 
         // Call the stored procedure
-        $users = Booking::get();
-
+        $bookings = Booking::where('passengerid', Auth::user()->username)->get();
         // Return the response
-        if ($users) {
+        if ($bookings) {
             return response()->json([
                 'status' => 200,
-                'message' => 'Users retrieved!',
-                'users' => $users
+                'message' => 'Booking History retrieved!',
+                'users' => $bookings
             ], 200);
         } else {
             return response()->json([
                 'status' => 404,
-                'message' => 'No users found!'
-            ]);
-        }
-    }
-    // create user
-    public function createUser(Request $request) {
-        
-        $validator = Validator::make($request->all(), [
-            'name' => 'required',
-            'lastName' => 'required',
-            'username' => 'required',
-            'gender' => 'required',
-            'mobile' => 'required',
-            'idNumber' => 'required',
-            'password' => 'required'
-        ]);
-
-        if($validator->fails()) {
-            return response()->json([
-                'status' => 400,
-                'message' => $validator->messages()->all()
-            ]);
-        }
-        // Check if user already exist
-        $checkUserExist = User::where('username', $request->username)->count();
-        if($checkUserExist > 0){
-            return response()->json([
-                'status' => 500,
-                'message' => 'Username already taken',
-
-            ]);
-        }
-        // insert the user
-        $add = User::create([
-            'first_name' => strtoupper($request->name),
-            'last_name' => strtoupper($request->lastName),
-            'username' => $request->username,
-            'contact' => $request->mobile,  
-            'id_number' => $request->idNumber,
-            'password' => $request->password,
-            'access_level' => 5
-        ]);
-
-        // Return the response
-        if ($add) {
-            return response()->json([
-                'status' => 200,
-                'message' => 'Account Created!'
-            ], 200);
-        } else {
-            return response()->json([
-                'status' => 500,
-                'message' => 'Invalid User!'
+                'message' => 'No Bookings found!'
             ]);
         }
     }
