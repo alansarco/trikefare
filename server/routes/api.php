@@ -20,7 +20,7 @@ use App\Http\Controllers\Api\ZReportController;
 use App\Http\Controllers\Api\XHistoryController;
 use App\Http\Controllers\Api\XProfileController;
 use App\Http\Controllers\Api\XNewsFareController;
-
+use App\Http\Controllers\Api\ZBookingController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -56,6 +56,8 @@ Route::middleware('auth:sanctum')->group(function () {
 
     //Driver API
     Route::prefix('driver')->group(function () {
+        Route::get('getCurrentBookings', [ZBookingController::class, 'getCurrentBookings']);
+
         Route::get('getProfile', [ZProfileController::class, 'getProfile']);
         Route::post('updateProfile', [ZProfileController::class, 'updateProfile']);
 
