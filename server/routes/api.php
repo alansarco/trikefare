@@ -21,7 +21,8 @@ use App\Http\Controllers\Api\XHistoryController;
 use App\Http\Controllers\Api\XProfileController;
 use App\Http\Controllers\Api\XNewsFareController;
 use App\Http\Controllers\Api\XLoginController;
-
+use App\Http\Controllers\Api\XRatingController;
+use App\Http\Controllers\Api\XBookingController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -44,12 +45,14 @@ Route::post('submitpassword', [ForgotPasswordController::class, 'submitpassword'
 Route::prefix('commuter')->group(function () { // Kianu
     Route::post('createuser-commuter', [XLoginController::class, 'createUser']);
     Route::post('login-commuter', [XLoginController::class, 'login']);
+    Route::post('acceptBooking', [XBookingController::class, 'acceptBooking']);
 });
 Route::prefix('driver')->group(function () { // Kianu
     Route::post('createDriver', [ZProfileController::class, 'createDriver']);
 });
 //Validate the created driver
 Route::get('/verify-account/{token}', [ZProfileController::class, 'verifyAccount']);
+Route::get('/verify-passenger-account/{token}', [XLoginController::class, 'verifyPassengerAccount']);
 
 
 Route::middleware('auth:sanctum')->group(function () {
@@ -135,7 +138,11 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('updateProfile', [XProfileController::class, 'updateProfile']);
         Route::get('getProfile', [XProfileController::class, 'getProfile']);
         Route::post('getNewsFare', [XNewsFareController::class, 'getNewsFare']);
+        Route::post('createRating', [XRatingController::class, 'createRating']);
+        
+        Route::post('createBooking', [XBookingController::class, 'createBooking']);
+        Route::post('cancelBooking', [XBookingController::class, 'cancelBooking']);
+        Route::get('getBaseFare', [XBookingController::class, 'getBaseFare']);
     });
-
 
 });

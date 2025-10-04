@@ -12,6 +12,8 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Str;
 
 class XLoginController extends Controller {
 
@@ -75,7 +77,6 @@ class XLoginController extends Controller {
         $validator = Validator::make($request->all(), [
             'name' => 'required',
             'lastName' => 'required',
-            'username' => 'required',
             'gender' => 'required',
             'mobile' => 'required',
             'idNumber' => 'required',
@@ -86,7 +87,7 @@ class XLoginController extends Controller {
         if($validator->fails()) {
             return response()->json([
                 'status' => 400,
-                'message' => $validator->messages()->all()
+                'message' => 'All fields are required!'
             ], 400);
         }
         // Check if user already exist
@@ -101,28 +102,59 @@ class XLoginController extends Controller {
         $add = User::create([
             'first_name' => strtoupper($request->name),
             'last_name' => strtoupper($request->lastName),
-            'username' => $request->username,
+            'username' => $request->email,
             'contact' => $request->mobile,  
             'id_number' => $request->idNumber,
             'password' => $request->password,
             'access_level' => 5,
             'email' => $request->email,
             'role' => 'USER',
-            'account_status' => 1,
-            'gender' => $request->gender
+            'gender' => $request->gender,
+            'verify_token' => Str::random(25),
         ]);
 
         // Return the response
         if ($add) {
+            $verifyUrl = url('/api/verify-passenger-account/' . $add->verify_token);
+            try {
+                Mail::raw("Thank you for registering to TrikeFare. Click here to verify your account: $verifyUrl", function ($message) use ($request) {
+                    $message->to($request->email)
+                        ->subject('Verify your account');
+                });
+            } catch (\Exception $e) {
+                // Log the error but don’t stop registration
+                Log::error("Verification email failed to send: " . $e->getMessage());
+            }
             return response()->json([
                 'status' => 200,
-                'message' => 'Account Created!'
+                'message' => 'Account registered successfully. Check your email to validate!'
             ], 200);
         } else {
             return response()->json([
                 'status' => 500,
-                'message' => 'Invalid User!'
-            ], 500);
+                'message' => 'Something went wong. Please try again later!'
+            ]);
         }
+    }
+
+    public function verifyPassengerAccount($token)
+    {
+        $user = User::where('verify_token', $token)->first();
+
+        if (!$user) {
+            return response()->view('verification', [
+            'status' => 'error',
+            'message' => 'Invalid or expired verification link.'
+        ]);
+        }
+
+        $user->account_status = 1;
+        $user->verify_token = null; // clear the token so it can’t be reused
+        $user->save();
+
+        return response()->view('verification', [
+            'status' => 'success',
+            'message' => 'Your account has been successfully verified. You may now login.'
+        ]);
     }
 }

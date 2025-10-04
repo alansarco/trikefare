@@ -6,22 +6,18 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class App_Info extends Model
+class Rating extends Model
 {
     use HasFactory;
     use SoftDeletes;
 
-    protected $table = "app_info";
+    protected $table = "ratings";
 
     protected $fillable = [
-        'app_id',
-        'system_info',
-        'event_notif',
-        'base_fare',
-        'fare_rate',
-        'email',
-        'contact',
-        'taripa',
-        'created_by'
+        'user',
+        'experience',
+        'suggestion',
+        'created_by', 
+        'updated_by'
     ];
 }
