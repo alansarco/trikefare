@@ -71,7 +71,7 @@ class XProfileController extends Controller {
             if($validator->fails()) {
                 return response()->json([
                     'status' => 500,
-                    'message' => $validator->messages()->all()
+                    'message' => 'All fields are required!'
                 ]);
             }
             $emailExist = User::where('username', '!=', Auth::user()->username)->where('email', $request->email)->first();

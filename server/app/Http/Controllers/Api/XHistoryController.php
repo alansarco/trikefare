@@ -26,20 +26,29 @@ class XHistoryController extends Controller
         // $accountStatus = $request->account_status ?? '';
         // $accessLevel = $request->access_level ?? '';
 
-        // Call the stored procedure
-        $bookings = Booking::where('passengerid', Auth::user()->username)->get();
-        // Return the response
-        if ($bookings) {
+        try {
+            // Call the stored procedure
+            $bookings = Booking::where('passengerid', Auth::user()->username)->get();
+            // Return the response
+            if ($bookings) {
+                return response()->json([
+                    'status' => 200,
+                    'message' => 'Booking History retrieved!',
+                    'users' => $bookings
+                ], 200);
+            } else {
+                return response()->json([
+                    'users' => $bookings,
+                    'status' => 500,
+                    'message' => 'No Bookings found!'
+                ]);
+            }
+        }
+        catch (Exception $e) {
             return response()->json([
-                'status' => 200,
-                'message' => 'Booking History retrieved!',
-                'users' => $bookings
-            ], 200);
-        } else {
-            return response()->json([
-                'status' => 404,
-                'message' => 'No Bookings found!'
-            ]);
+                'status' => 500,
+                'message' => $e->getMessage()
+            ], 500);
         }
     }
 
