@@ -24,9 +24,16 @@ class Booking extends Model
         'rate',
         'category',
         'accept_flag',
+        'start_flag',
+        'finish_flag',
         'accept_date',
         'cancel_flag',
+        'cancel_by',
         'created_by',
-        'updated_by'
+        'updated_by',
+        'coordinates_to_lat',
+        'coordinates_to_long',
+        'coordinates_from_lat',
+        'coordinates_from_long'
     ];
 }
