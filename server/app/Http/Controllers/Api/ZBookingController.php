@@ -22,6 +22,7 @@ class ZBookingController extends Controller
     public function getCurrentBookings()
     {
         try {
+            $threeHoursAgo = Carbon::now()->subHours(3);
             $bookingData = Booking::leftJoin('users', 'bookings.passengerid', '=', 'users.username')
                 ->select(
                     'bookings.*',
@@ -47,6 +48,8 @@ class ZBookingController extends Controller
                         ->orWhere('bookings.driverid', '');
                 })
                 // ->where('bookings.driverid', '!=', Auth::user()->username)
+                ->where('bookings.created_at', '>=', $threeHoursAgo)
+
 
                 ->get();
 
@@ -76,6 +79,7 @@ class ZBookingController extends Controller
     {
         try {
             $threeHoursAgo = Carbon::now()->subHours(3);
+            $distance = App_Info::select('distance_limit')->first();
 
             $myBookingData = Booking::leftJoin('users', 'bookings.passengerid', '=', 'users.username')
                 ->select(
@@ -100,6 +104,7 @@ class ZBookingController extends Controller
                 ->first();
 
             if ($myBookingData) {
+                $myBookingData->distance_limit = $distance->distance_limit ?? 5;
                 return response()->json([
                     'status' => 200,
                     'myBookingData' => $myBookingData,
@@ -181,7 +186,7 @@ class ZBookingController extends Controller
                         'driverid' => Auth::user()->username,
                         'accept_date' => today(),
                     ]);
-                    
+
                 if ($update) {
                     $booking = Booking::where('bookid', $request->bookid)->first();
                     Http::post('https://trikefarewebsocket.onrender.com/notify', [
@@ -240,6 +245,14 @@ class ZBookingController extends Controller
                         'accept_date' => NULL,
                     ]);
                 if ($update) {
+                    $booking = Booking::where('bookid', $request->bookid)->first();
+                    Http::post('https://trikefarewebsocket.onrender.com/notify', [
+                        'event' => 'driver_cancelled',
+                        'data' => [
+                            'book_id' => $booking,
+                            'user_id' => $booking->passengerid,
+                        ]
+                    ]);
                     return response()->json([
                         'status' => 200,
                         'message' => "Booking Cancelled! Please wait..."
@@ -275,6 +288,14 @@ class ZBookingController extends Controller
                     'driverid' => Auth::user()->username,
                 ]);
             if ($update) {
+                $booking = Booking::where('bookid', $request->bookid)->first();
+                Http::post('https://trikefarewebsocket.onrender.com/notify', [
+                    'event' => 'driver_finished',
+                    'data' => [
+                        'book_id' => $booking,
+                        'user_id' => $booking->passengerid,
+                    ]
+                ]);
                 return response()->json([
                     'status' => 200,
                     'message' => "Booking started! Can no longer cancel"
@@ -309,6 +330,14 @@ class ZBookingController extends Controller
                     'driverid' => Auth::user()->username,
                 ]);
             if ($update) {
+                $booking = Booking::where('bookid', $request->bookid)->first();
+                Http::post('https://trikefarewebsocket.onrender.com/notify', [
+                    'event' => 'driver_completed',
+                    'data' => [
+                        'book_id' => $booking,
+                        'user_id' => $booking->passengerid,
+                    ]
+                ]);
                 return response()->json([
                     'status' => 200,
                     'message' => "Booking complete. Accept more booking now!"

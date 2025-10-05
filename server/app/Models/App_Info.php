@@ -15,6 +15,7 @@ class App_Info extends Model
 
     protected $fillable = [
         'app_id',
+        'distance_limit',
         'system_info',
         'event_notif',
         'base_fare',
