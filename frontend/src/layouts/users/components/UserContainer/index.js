@@ -21,7 +21,7 @@ import breakpoints from "assets/theme/base/breakpoints";
 
 // Images
 import logo from "assets/images/logo.png";
-import bgImage from "assets/images/pateros.jpg";
+import bgImage from "assets/images/taguig.jpg";
 import Information from "../Information";
 import Edit from "../Edit";
 import { apiRoutes } from "components/Api/ApiRoutes";
@@ -127,7 +127,7 @@ function UserContainer({USER, HandleRendering, ReloadTable, allowEdit, allowDele
               rgba(gradients.error.state, 0.1)
             )}, url(${bgImage})`, 
           backgroundSize: "cover",
-          backgroundPosition: "50%",
+          // backgroundPosition: "50%",
           overflow: "hidden",
         }}
       />

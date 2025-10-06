@@ -20,7 +20,7 @@ import breakpoints from "assets/theme/base/breakpoints";
 
 // Images
 import logo from "assets/images/logo.png";
-import bgImage from "assets/images/pateros.jpg";
+import bgImage from "assets/images/taguig.jpg";
 import Security from "../Security";
 import { useStateContext } from "context/ContextProvider";
 import { useDashboardData } from "layouts/dashboard/data/dashboardRedux";
@@ -87,7 +87,7 @@ function ProfileContainer() {
               rgba(gradients.error.state, 0.1)
             )}, url(${bgImage})`, 
           backgroundSize: "cover",
-          backgroundPosition: "50%",
+          // backgroundPosition: "50%",
           overflow: "hidden",
         }}
       />

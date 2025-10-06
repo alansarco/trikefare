@@ -35,6 +35,7 @@ class User extends Authenticatable
         'plate_number', 
         'address', 
         'id_number', 
+        'id_verified', 
         'password', 
         'password_change',
         'account_status',

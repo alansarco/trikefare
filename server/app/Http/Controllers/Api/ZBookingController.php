@@ -128,6 +128,7 @@ class ZBookingController extends Controller
     public function acceptBookingStatus(Request $request)
     {
         try {
+            $user = User::where('username', Auth::user()->username)->first();
             $threeHoursAgo = Carbon::now()->subHours(3);
 
             $myBookingData = Booking::leftJoin('users', 'bookings.passengerid', '=', 'users.username')
@@ -189,6 +190,10 @@ class ZBookingController extends Controller
 
                 if ($update) {
                     $booking = Booking::where('bookid', $request->bookid)->first();
+                    $booking->plate_number = $user->id_number ?? null;
+                    $booking->first_name = $user->first_name ?? null;
+                    $booking->middle_name = $user->middle_name ?? null;
+                    $booking->last_name = $user->last_name ?? null;
                     Http::post('https://trikefarewebsocket.onrender.com/notify', [
                         'event' => 'booking_accepted',
                         'data' => [

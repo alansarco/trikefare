@@ -68,6 +68,56 @@ class LoginController extends Controller {
         }
     }
 
+    public function logindriver(Request $request)  {
+        $rules = [
+            'access_level' => 'required',
+            'username' => 'required|string',
+            'password' => 'required|string',
+        ];
+        $credentials = $request->validate($rules);
+
+        if (!Auth::attempt($credentials)) {
+            // End
+            return response()->json([
+                'message' => "Invalid account credentials!"
+            ]);
+        }   
+
+        $verifyUser = User::select('username', 'access_level', 'role', 
+                DB::raw("CONCAT_WS(' ', first_name, middle_name, last_name) as fullname"
+            ))
+            ->where('access_level', $request->access_level)
+            ->where('username', $request->username)
+            ->where('account_status', 1)
+            ->where('id_verified', 1)
+            ->first();
+
+        if ($verifyUser) {
+            User::where('username', $verifyUser->username)->update(['last_online' => Carbon::now()]);
+            /** @var \App\Models\User $user */
+            $user = Auth::user();
+            $expirationTime = now()->addMinutes(60);
+            $token = $user->createToken($user->username, ['expires_at' => $expirationTime])->plainTextToken;
+            $cookie = cookie('jwt', $token, 60);
+            
+            return response()->json([
+                'status' => 200,
+                'user' => $user->username,
+                'role' => $user->role,
+                'access' => $user->access_level,
+                'fullname' => $verifyUser->fullname ?? "N/A",
+                'contact' => $user->contact ?? "N/A",
+                'access_token' => $token,
+                'message' => "Login Success!"
+            ])->withCookie($cookie);
+
+        } else {
+            return response()->json([
+                'message' => 'Account is no longer active!'  
+            ]);
+        }
+    }
+
     public function user(Request $request) {
         $authUser = Auth::user();
 

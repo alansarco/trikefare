@@ -34,8 +34,8 @@ function SignIn() {
   const [submitLogin, setSubmitLogin] = useState(false);
 
   const [formData, setFormData] = useState({
-    username: 'alsarco7@gmail.com',
-    password: 'Sarco123!',
+    username: '',
+    password: '',
     access_level: 999,
   });
 

@@ -15,11 +15,14 @@ use Illuminate\Pagination\LengthAwarePaginator;
 use Box\Spout\Reader\Common\Creator\ReaderEntityFactory;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 
 class UsersController extends Controller
 {
     // displays all list of users
-    public function index(Request $request) {
+    public function index(Request $request)
+    {
         $filter = $request->filter ?? '';
         $genderFilter = $request->gender ?? '';
         $accountStatus = $request->account_status ?? '';
@@ -60,14 +63,16 @@ class UsersController extends Controller
     }
 
     // retrieve specific user's information
-    public function retrieve(Request $request) {
+    public function retrieve(Request $request)
+    {
         $account = User::where('username', $request->username)->first();
         $haveAccount = false;
-        if($account) {
+        if ($account) {
             $haveAccount = true;
         }
 
-        $user = User::select('*',
+        $user = User::select(
+            '*',
             DB::raw("TO_BASE64(id_picture) as id_picture"),
             DB::raw("CONCAT(DATE_FORMAT(birthdate, '%M %d, %Y')) as birthday"),
             DB::raw("CONCAT(DATE_FORMAT(created_at, '%M %d, %Y %h:%i %p')) as date_added"),
@@ -75,17 +80,16 @@ class UsersController extends Controller
             DB::raw("CONCAT(DATE_FORMAT(created_at, '%M %d, %Y %h:%i %p')) as created_date"),
             DB::raw("CONCAT(DATE_FORMAT(updated_at, '%M %d, %Y %h:%i %p')) as updated_date"),
         )
-        ->where('username', $request->username)->first();
+            ->where('username', $request->username)->first();
 
-        if($user) {
+        if ($user) {
             return response()->json([
                 'status' => 200,
                 'user' => $user,
                 'haveAccount' => $haveAccount,
                 'message' => "Data retrieved!"
             ], 200);
-        }
-        else {
+        } else {
             return response()->json([
                 'user' => $user,
                 'message' => "Data not found!"
@@ -94,7 +98,8 @@ class UsersController extends Controller
     }
 
     // update specific user's information
-    public function update(Request $request) {
+    public function update(Request $request)
+    {
         $validator = Validator::make($request->all(), [
             'username' => 'required',
             'first_name' => 'required',
@@ -109,43 +114,41 @@ class UsersController extends Controller
             'birthdate' => 'required',
         ]);
 
-        if($validator->fails()) {
+        if ($validator->fails()) {
             return response()->json([
                 'message' => $validator->messages()->all()
             ]);
-        }
-        else {
+        } else {
             $user = User::where('username', $request->username)->first();
             $role = 'USER';
-            if($request->access_level == 999) {
+            if ($request->access_level == 999) {
                 $role = 'ADMIN';
             }
 
-            if($user) {
+            if ($user) {
                 try {
                     $update = User::where('username', $request->username)
-                    ->update([
-                        'first_name' => strtoupper($request->first_name),
-                        'middle_name' => strtoupper($request->middle_name),
-                        'last_name' => strtoupper($request->last_name),
-                        'gender' => $request->gender,   
-                        'address' => $request->address,   
-                        'contact' => $request->contact,   
-                        'role' => strtoupper($role),   
-                        'access_level' => $request->access_level,   
-                        'account_status' => $request->account_status,   
-                        'id_number' => $request->id_number,   
-                        'birthdate' => $request->birthdate,  
-                        'updated_by' => Auth::user()->username,
-                    ]);
+                        ->update([
+                            'first_name' => strtoupper($request->first_name),
+                            'middle_name' => strtoupper($request->middle_name),
+                            'last_name' => strtoupper($request->last_name),
+                            'gender' => $request->gender,
+                            'address' => $request->address,
+                            'contact' => $request->contact,
+                            'role' => strtoupper($role),
+                            'access_level' => $request->access_level,
+                            'account_status' => $request->account_status,
+                            'id_number' => $request->id_number,
+                            'birthdate' => $request->birthdate,
+                            'updated_by' => Auth::user()->username,
+                        ]);
 
-                    if($update) {
+                    if ($update) {
                         return response()->json([
                             'status' => 200,
                             'message' => 'User updated successfully!'
                         ], 200);
-                    }
-                    else {
+                    } else {
                         return response()->json([
                             'message' => 'Something went wrong!'
                         ]);
@@ -155,8 +158,7 @@ class UsersController extends Controller
                         'message' => $e->getMessage()
                     ]);
                 }
-            }
-            else {
+            } else {
                 return response()->json([
                     'message' => 'User not found!'
                 ]);
@@ -165,33 +167,107 @@ class UsersController extends Controller
     }
 
     // Delete / deactivate user
-    public function delete(Request $request) {
+    public function delete(Request $request)
+    {
         $authUser = Auth::user();
-        if($authUser->role !== "ADMIN" || $authUser->access_level < 10) {
+        if ($authUser->role !== "ADMIN" || $authUser->access_level < 10) {
             return response()->json([
                 'message' => 'You are not allowed to perform this action!'
             ]);
         }
-        
+
         $delete = User::where('username', $request->username)->delete();
 
-        if($delete) {
+        if ($delete) {
             return response()->json([
                 'status' => 200,
                 'message' => 'Account deleted successfully!'
             ], 200);
-        }
-        else {
+        } else {
             return response()->json([
                 'message' => 'Account not found!'
             ]);
         }
     }
 
-    public function store(Request $request) {
+    // Approve Driver
+    public function driverapprove(Request $request)
+    {
+        $authUser = Auth::user();
+        if ($authUser->role !== "ADMIN" || $authUser->access_level < 10) {
+            return response()->json([
+                'message' => 'You are not allowed to perform this action!'
+            ]);
+        }
+
+        $update = User::where('username', $request->username)
+            ->update([
+                'id_verified' => 1,
+            ]);
+
+        if ($update) {
+            try {
+                Mail::raw("Hi, this is to inform you that your driver account in trikeFare is APPROVED. You may now login your account.", function ($message) use ($request) {
+                    $message->to('asarco.asidev@gmail.com')
+                        ->subject('Driver Account Approved');
+                });
+            } catch (\Exception $e) {
+                // Log the error but don’t stop registration
+                Log::error("Verification email failed to send: " . $e->getMessage());
+            }
+            return response()->json([
+                'status' => 200,
+                'message' => 'Account approved successfully!'
+            ], 200);
+        } else {
+            return response()->json([
+                'message' => 'Account not found!'
+            ]);
+        }
+    }
+
+    // Reject Driver
+    public function driverreject(Request $request)
+    {
+        $authUser = Auth::user();
+        if ($authUser->role !== "ADMIN" || $authUser->access_level < 10) {
+            return response()->json([
+                'message' => 'You are not allowed to perform this action!'
+            ]);
+        }
+
+        $update = User::where('username', $request->username)
+            ->update([
+                'id_verified' => 2,
+                'account_status' => 0,
+            ]);
+
+        if ($update) {
+            try {
+                Mail::raw("Sorry, this is to inform you that your driver account in trikeFare is REJECTED.", function ($message) use ($request) {
+                    $message->to('asarco.asidev@gmail.com')
+                        ->subject('Driver Account Rejected');
+                });
+            } catch (\Exception $e) {
+                // Log the error but don’t stop registration
+                Log::error("Verification email failed to send: " . $e->getMessage());
+            }
+            return response()->json([
+                'status' => 200,
+                'message' => 'Account rejected successfully!'
+            ], 200);
+        } else {
+            return response()->json([
+                'message' => 'Account not found!'
+            ]);
+        }
+    }
+
+    public function store(Request $request)
+    {
         $authUser = User::select('first_name')->where('username', Auth::user()->username)->first();
 
-        if(Auth::user()->role !== "ADMIN" || Auth::user()->role < 10) {
+        if (Auth::user()->role !== "ADMIN" || Auth::user()->role < 10) {
             return response()->json([
                 'message' => 'You are not allowed to perform this action!'
             ]);
@@ -209,7 +285,7 @@ class UsersController extends Controller
             'id_picture' => 'nullable|file|mimes:jpeg,png,jpg,gif|max:5120',
         ]);
 
-        if($validator->fails()) {
+        if ($validator->fails()) {
             return response()->json([
                 'message' => $validator->messages()->all()
             ]);
@@ -217,12 +293,12 @@ class UsersController extends Controller
 
         $accountExist = User::where('username', $request->username)->first();
         $role = 'USER';
-        
-        if($request->access_level == 999) {
+
+        if ($request->access_level == 999) {
             $role = 'ADMIN';
         }
 
-        if(!$accountExist) {
+        if (!$accountExist) {
             try {
                 $pictureData = null; // Initialize the variable to hold the file path
                 if ($request->hasFile('id_picture')) {
@@ -235,37 +311,35 @@ class UsersController extends Controller
                     'first_name' => strtoupper($request->first_name),
                     'middle_name' => strtoupper($request->middle_name),
                     'last_name' => strtoupper($request->last_name),
-                    'gender' => $request->gender,   
-                    'address' => $request->address,   
-                    'contact' => $request->contact,   
-                    'password' => $hashedPassword,   
-                    'role' => strtoupper($role),   
-                    'id_picture' => $pictureData,   
-                    'access_level' => $request->access_level,   
-                    'id_number' => $request->id_number,   
-                    'birthdate' => $request->birthdate,  
-                    'account_status' => 1,  
+                    'gender' => $request->gender,
+                    'address' => $request->address,
+                    'contact' => $request->contact,
+                    'password' => $hashedPassword,
+                    'role' => strtoupper($role),
+                    'id_picture' => $pictureData,
+                    'access_level' => $request->access_level,
+                    'id_number' => $request->id_number,
+                    'birthdate' => $request->birthdate,
+                    'account_status' => 1,
                     'created_by' => $authUser->name,
                 ]);
 
-            if($add) {
-                return response()->json([
-                    'status' => 200,
-                    'message' => 'Account added successfully!'
-                ], 200);
-            }
-            else {
-                return response()->json([
-                    'message' => 'Something went wrong!'
-                ]);
-            }
+                if ($add) {
+                    return response()->json([
+                        'status' => 200,
+                        'message' => 'Account added successfully!'
+                    ], 200);
+                } else {
+                    return response()->json([
+                        'message' => 'Something went wrong!'
+                    ]);
+                }
             } catch (Exception $e) {
                 return response()->json([
                     'message' => $e->getMessage()
                 ]);
             }
-        }
-        else {
+        } else {
             return response()->json([
                 'message' => 'Username already exist!'
             ]);
@@ -274,14 +348,15 @@ class UsersController extends Controller
 
 
     // Change your password
-    public function personalchangepass(Request $request) {
+    public function personalchangepass(Request $request)
+    {
         $authUser = Auth::user();
 
         $pattern = '/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^a-zA-Z\d\s]).{8,}$/';
-        if(!preg_match($pattern, $request->newpass)) {
+        if (!preg_match($pattern, $request->newpass)) {
             return response()->json([
                 'message' => 'Password must contain capital and small letter, number, and special character!'
-            ]);    
+            ]);
         }
 
         $validator = Validator::make($request->all(), [
@@ -289,35 +364,32 @@ class UsersController extends Controller
             'confirmpass' => 'required',
         ]);
 
-        if($validator->fails()) {
+        if ($validator->fails()) {
             return response()->json([
                 'message' => $validator->messages()->all()
             ]);
-        }
-        
-        else {
+        } else {
             $user = User::where('username', $authUser->username)->first();
-            if($user) {
+            if ($user) {
                 try {
-                    if($request->newpass !== $request->confirmpass) {
+                    if ($request->newpass !== $request->confirmpass) {
                         return response()->json([
                             'message' => 'Password did not match!'
-                        ]);        
+                        ]);
                     }
-                    if($request->password === $request->confirmpass) {
+                    if ($request->password === $request->confirmpass) {
                         return response()->json([
                             'message' => 'Old and new password is the same!'
                         ]);
                     }
                     $hashedPassword = Hash::make($request->newpass);
-                    $update = User::where('username', $authUser->username)->update([ 'password' => $hashedPassword]);
-                    if($update) {   
+                    $update = User::where('username', $authUser->username)->update(['password' => $hashedPassword]);
+                    if ($update) {
                         return response()->json([
                             'status' => 200,
                             'message' => 'Password changed!'
                         ], 200);
-                    }
-                    else {
+                    } else {
                         return response()->json([
                             'message' => 'Something went wrong!'
                         ]);
@@ -332,7 +404,6 @@ class UsersController extends Controller
                     'message' => 'Something went wrong!'
                 ]);
             }
-
         }
     }
 }

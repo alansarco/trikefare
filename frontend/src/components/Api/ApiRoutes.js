@@ -1,9 +1,9 @@
 //local
-export const mainRoute = "http://127.0.0.1:8000";
+// export const mainRoute = "http://127.0.0.1:8000";
 //without portal 
 // export const mainRoute = "https://trikefare.com";
 //without portal
-// export const mainRoute = "https://trikefare.com/server/public";
+export const mainRoute = "https://trikefare.com/server/public";
 
 export const apiRoutes = {  
     login: `${mainRoute}/api/login`,
@@ -48,6 +48,8 @@ export const apiRoutes = {
     accountDelete: `${mainRoute}/api/accounts/delete`,
     accountUpdate: `${mainRoute}/api/accounts/update`,
     personalChangePass: `${mainRoute}/api/accounts/personalchangepass`,
+    driverApprove: `${mainRoute}/api/accounts/driverapprove`,
+    driverReject: `${mainRoute}/api/accounts/driverreject`,
 
 
     otherStatsRetrieve: `${mainRoute}/api/dashboard/otherStats`,

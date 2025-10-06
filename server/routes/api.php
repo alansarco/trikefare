@@ -36,6 +36,7 @@ use Illuminate\Support\Facades\Route;
 | be assigned to the "api" middleware group. Make something great!
 |
 */
+Route::post('logindriver', [LoginController::class, 'logindriver']);
 Route::post('login', [LoginController::class, 'login']);
 Route::get('app_info', [GeneralController::class, 'app_info']);
 Route::post('createotpverification', [SignupController::class, 'createotpverification']);
@@ -98,6 +99,8 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('update', [UsersController::class, 'update']);
         Route::get('retrieve', [UsersController::class, 'retrieve']);
         Route::get('delete', [UsersController::class, 'delete']);
+        Route::get('driverapprove', [UsersController::class, 'driverapprove']);
+        Route::get('driverreject', [UsersController::class, 'driverreject']);
         Route::post('personalchangepass', [UsersController::class, 'personalchangepass']);
     });
 

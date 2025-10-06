@@ -63,7 +63,7 @@ class ZProfileController extends Controller
             'id_number' => $request->id_number,
             'password' => $request->password,
             'role' => 'USER',
-            'access_level' => 5,
+            'access_level' => 10,
             'gender' => $request->gender,
             'verify_token' => Str::random(25),
         ]);
@@ -103,13 +103,13 @@ class ZProfileController extends Controller
         ]);
         }
 
-        $user->account_status = 1;
+        $user->account_status = 0;
         $user->verify_token = null; // clear the token so it can’t be reused
         $user->save();
 
         return response()->view('verification', [
             'status' => 'success',
-            'message' => 'Your account has been successfully verified. You may now login.'
+            'message' => 'Your email has been successfully verified. The admin will still validate and approve your account in order for you to login.'
         ]);
     }
 
