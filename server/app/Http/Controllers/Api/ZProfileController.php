@@ -60,8 +60,16 @@ class ZProfileController extends Controller
         if ($request->hasFile('license_picture')) {
             $file = $request->file('license_picture');
             $fileName = time() . '_' . $file->getClientOriginalName();
-            $file->storeAs('public/license_pictures', $fileName); // stored in storage/app/public/license_pictures
-            $licensePath = 'license_pictures/' . $fileName;
+            $destinationPath = public_path('storage/license_pictures');
+
+            if (!file_exists($destinationPath)) {
+                mkdir($destinationPath, 0755, true);
+            }
+            // Move file directly to public directory
+            $file->move($destinationPath, $fileName);
+
+            // Save path relative to public
+            $licensePath = 'storage/license_pictures/' . $fileName;
         }
 
         // insert the user

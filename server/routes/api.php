@@ -8,6 +8,7 @@ use App\Http\Controllers\Api\FeedbackController;
 use App\Http\Controllers\Api\GeneralController;
 use App\Http\Controllers\Api\LoginController;
 use App\Http\Controllers\Api\ForgotPasswordController;
+use App\Http\Controllers\Api\MobileForgotPasswordController;
 use App\Http\Controllers\Api\NewsController;
 use App\Http\Controllers\Api\SignupController;
 use App\Http\Controllers\Api\ReportController;
@@ -43,6 +44,13 @@ Route::post('createotpverification', [SignupController::class, 'createotpverific
 Route::post('signupuser', [SignupController::class, 'signupuser']);
 Route::post('createotp', [ForgotPasswordController::class, 'createotp']);
 Route::post('validateotp', [ForgotPasswordController::class, 'validateotp']);
+
+//Mobile Change password
+Route::post('sendEmail', [MobileForgotPasswordController::class, 'sendEmail']);
+Route::post('sendOTP', [MobileForgotPasswordController::class, 'sendOTP']);
+Route::post('setPassword', [MobileForgotPasswordController::class, 'setPassword']);
+
+
 Route::post('submitpassword', [ForgotPasswordController::class, 'submitpassword']);
 Route::prefix('commuter')->group(function () { // Kianu
     Route::post('createuser-commuter', [XLoginController::class, 'createUser']);
