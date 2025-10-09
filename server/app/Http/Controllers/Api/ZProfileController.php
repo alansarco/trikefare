@@ -37,12 +37,13 @@ class ZProfileController extends Controller
             'email' => 'required',
             'address' => 'required',
             'password' => 'required',
+            'license_picture' => 'nullable|image|mimes:jpeg,png,jpg|max:5120',
         ]);
 
         if ($validator->fails()) {
             return response()->json([
                 'status' => 500,
-                'message' => 'All fields are required!'
+                'message' => 'All fields are required and license ID must not exceed 5MB!'
             ]);
         }
         // Check if user already exist
@@ -53,6 +54,16 @@ class ZProfileController extends Controller
                 'message' => 'Email already taken',
             ]);
         }
+
+        $licensePath = null;
+
+        if ($request->hasFile('license_picture')) {
+            $file = $request->file('license_picture');
+            $fileName = time() . '_' . $file->getClientOriginalName();
+            $file->storeAs('public/license_pictures', $fileName); // stored in storage/app/public/license_pictures
+            $licensePath = 'license_pictures/' . $fileName;
+        }
+
         // insert the user
         $add = User::create([
             'first_name' => strtoupper($request->first_name),
@@ -66,6 +77,7 @@ class ZProfileController extends Controller
             'access_level' => 10,
             'gender' => $request->gender,
             'verify_token' => Str::random(25),
+            'license_picture' => $licensePath,
         ]);
 
         // Return the response
@@ -98,12 +110,12 @@ class ZProfileController extends Controller
 
         if (!$user) {
             return response()->view('verification', [
-            'status' => 'error',
-            'message' => 'Invalid or expired verification link.'
-        ]);
+                'status' => 'error',
+                'message' => 'Invalid or expired verification link.'
+            ]);
         }
 
-        $user->account_status = 0;
+        $user->account_status = 1;
         $user->verify_token = null; // clear the token so it can’t be reused
         $user->save();
 
@@ -123,19 +135,20 @@ class ZProfileController extends Controller
                 'last_name',
                 'contact',
                 'id_number',
+                'license_picture',
                 'email',
                 'gender',
                 'address',
                 DB::raw("CONCAT_WS(' ', first_name, middle_name, last_name) as fullname"),
-                // DB::raw("TO_BASE64(id_picture) as id_picture"),
-                // DB::raw("CONCAT('data:image/png;base64,', TO_BASE64(id_picture)) as id_picture")
-                // DB::raw("CONCAT('data:image/png;base64,', REPLACE(REPLACE(TO_BASE64(id_picture), '\n', ''), '\r', '')) as id_picture")
             )
-
                 ->where('username', Auth::user()->username)->first();
 
 
             if ($profile) {
+                if ($profile->license_picture) {
+                    $profile->license_picture = asset('storage/license_pictures/' . basename($profile->license_picture));
+                }
+
                 return response()->json([
                     'status' => 200,
                     'profile' => $profile,

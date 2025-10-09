@@ -62,7 +62,7 @@ class XProfileController extends Controller {
                 'first_name' => 'required',
                 'last_name' => 'required',
                 'contact' => 'required',
-                'id_number' => 'required',
+                // 'id_number' => 'required',
                 'gender' => 'required',
                 'email' => 'required',
                 'address' => 'required',

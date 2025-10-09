@@ -11,6 +11,7 @@ use App\Models\App_Info;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
@@ -79,7 +80,7 @@ class XLoginController extends Controller {
             'lastName' => 'required',
             'gender' => 'required',
             'mobile' => 'required',
-            'idNumber' => 'required',
+            // 'idNumber' => 'required',
             'password' => 'required',
             'email' => 'required'
         ]);

@@ -32,6 +32,7 @@ class User extends Authenticatable
         'email', 
         'gender', 
         'id_picture', 
+        'license_picture',
         'plate_number', 
         'address', 
         'id_number', 
